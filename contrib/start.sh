@@ -1,4 +1,5 @@
 #!/bin/bash
+flask db upgrade
 
 touch /app/logs/gunicorn.log
 touch /app/logs/access.log
