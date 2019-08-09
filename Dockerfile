@@ -8,6 +8,10 @@ RUN pip install -q -U pip setuptools
 
 RUN mkdir /app
 
+# Copy the current directory contents 
+# into the container at meine-luftdaten-info
+ADD . /app/
+
 ADD requirements.txt /app
 RUN pip install -r /app/requirements.txt
 
@@ -18,7 +22,8 @@ ENV FLASK_APP "webapp:launch()"
 WORKDIR /app
 RUN mkdir logs
 
-EXPOSE 8000
+# Expose port
+EXPOSE 5000
 
 COPY ./contrib/start.sh /start.sh
 CMD [ "/start.sh" ]
