@@ -14,19 +14,22 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import os
 
 PROJECT_NAME = "luftdaten"
-PROJECT_URL = 'https://meine.luftdaten.info'
+PROJECT_URL = 'https://sensors.africa'
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 PROJECT_VERSION = '0.1.0'
 LOG_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir, 'logs'))
 
 DEBUG = False
 
-ADMINS = ['david.lackovic@me.com']
+SECRET_KEY = SECURITY_PASSWORD_SALT = os.environ.get(
+    'SSRP_SECRET_KEY', 'dummysecret')
+
+ADMINS = ['admin@codeforafrica.org']
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 
-MAIL_DEFAULT_SENDER = SECURITY_EMAIL_SENDER = MAILS_FROM = 'noreply@meine.luftdaten.info'
+MAIL_DEFAULT_SENDER = SECURITY_EMAIL_SENDER = MAILS_FROM = 'noreply@codeforafrica.org'
 MAIL_SERVER = 'smtp'
 MAIL_PORT = 25
 MAIL_USE_TLS = False
@@ -39,13 +42,15 @@ SQLALCHEMY_POOL_RECYCLE = 480
 
 # all fields after the scheme are optional, and will default to localhost on port 6379, using database 0.
 # redis://:password@hostname:port/db_number
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BROKER_URL = os.environ.get(
+    'SSRP_REDIS_URL', 'redis://redis:6379/0')
+CELERY_RESULT_BACKEND = os.environ.get(
+    'SSRP_REDIS_URL', 'redis://redis:6379/0')
 
-SECURITY_CONFIRMABLE = True
+SECURITY_CONFIRMABLE = os.getenv('SSRP_SECURITY_CONFIRMABLE', 'False') == 'True'
+SECURITY_LOGIN_WITHOUT_CONFIRMATION = os.getenv('SSRP_SECURITY_LOGIN_WITHOUT_CONFIRMATION', 'True') == 'True'
 SECURITY_REGISTERABLE = True
 SECURITY_CHANGEABLE = True
-SECURITY_CONFIRMABLE = True
 SECURITY_RECOVERABLE = True
 
 SECURITY_I18N_DIRNAME = os.path.join(PROJECT_ROOT, '..', 'translations')
@@ -53,9 +58,16 @@ SECURITY_I18N_DIRNAME = os.path.join(PROJECT_ROOT, '..', 'translations')
 SECURITY_POST_LOGIN_VIEW = 'personal.sensor_list'
 
 # Docker defaults
-SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://devel:devel@mysql/devel'
+SQLALCHEMY_DATABASE_URI = os.getenv(
+    "SSRP_DATABASE_URL",
+    "postgres://sensorsafrica-ssrp:sensorsafrica-ssrp@postgres:5432/sensorsafrica-ssrp",
+)
 SQLALCHEMY_BINDS = {
-    'external': 'mysql+pymysql://external:external@mysql/external',
+    'external':
+    os.getenv(
+        "SSRP_EXTERNAL_DATABASE_URL",
+        "postgres://sensorsafrica-ssrp:sensorsafrica-ssrp@postgres:5432/sensorsafrica-ssrp",
+    )
 }
 
 # Predefined sensor PINs
@@ -88,9 +100,9 @@ SENSOR_TYPES = {
     26: "7",  # SHT30
     27: "7",  # SHT31
     28: "7",  # SHT35
-    29: "15", # Lärm
-    30: "17", # NO2-A43F
-    31: "19", # Radiation_EC
+    29: "15",  # Lärm
+    30: "17",  # NO2-A43F
+    31: "19",  # Radiation_EC
 }
 
 # IDs of default SensorTypes assigned to node

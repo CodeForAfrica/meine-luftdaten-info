@@ -1,15 +1,16 @@
-FROM ubuntu:18.04
+FROM python:3.6.3
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update \
-    && apt-get install -qy --no-install-recommends python3 python3-pip python3-setuptools
+# Upgrade pip and setuptools
+RUN pip install -q -U pip setuptools
 
 RUN mkdir /app
 RUN useradd -d /app app
 
 ADD requirements.txt /app
-RUN pip3 install -r /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
