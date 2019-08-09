@@ -29,12 +29,12 @@ ADMINS = ['admin@codeforafrica.org']
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ECHO = False
 
-MAIL_DEFAULT_SENDER = SECURITY_EMAIL_SENDER = MAILS_FROM = 'noreply@codeforafrica.org'
-MAIL_SERVER = 'smtp'
-MAIL_PORT = 25
+MAIL_DEFAULT_SENDER = SECURITY_EMAIL_SENDER = MAILS_FROM = os.getenv('SSRP_MAIL_SENDER', 'noreply@codeforafrica.org')
+MAIL_SERVER = os.getenv('SSRP_MAIL_SERVER', 'smtp')
+MAIL_PORT = os.getenv('SSRP_MAIL_PORT', 25)
 MAIL_USE_TLS = False
-MAIL_USERNAME = None
-MAIL_PASSWORD = None
+MAIL_USERNAME = os.getenv('SSRP_MAIL_USERNAME')
+MAIL_PASSWORD = os.getenv('SSRP_MAIL_PASSWORD')
 MAIL_SUPPRESS_SEND = False
 
 # Default docker mariadb wait_timeout is 600s
