@@ -60,11 +60,6 @@ def sensor_data(id):
     node = get_object_or_404(Node, Node.id == id, Node.email == current_user.email)
     sensors = node.sensors
     for sensor in sensors:
-        if sensor.sensor_type_id == 14:
-            sensor.sensor_type_name = 'Feinstaub-Sensor SDS011'
-        elif sensor.sensor_type_id == 9:
-            sensor.sensor_type_name = 'Feuchtigkeits- und Temperatur-Sensor DHT22'
-
         try:
             # sensor_request = requests.get('http://api.luftdaten.info/static/v1/sensor/%s/' % (sensor.id))
             sensor_request = requests.get('http://127.0.0.1/v1/sensor/%s/' % (sensor.id))
