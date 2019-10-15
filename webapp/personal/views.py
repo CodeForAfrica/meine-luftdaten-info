@@ -61,7 +61,6 @@ def sensor_data(id):
     sensors = node.sensors
     for sensor in sensors:
         try:
-            # sensor_request = requests.get('http://api.luftdaten.info/static/v1/sensor/%s/' % (sensor.id))
             sensor_request = requests.get('http://api.sensors.africa/v1/sensors/%s/' % (sensor.id))
             sensor_request.raise_for_status()
             sensor_request = sensor_request.json()
@@ -70,6 +69,7 @@ def sensor_data(id):
         except:
             continue
 
+        sensor.location = node.location
         sensor.data = sensor_request[0]
         if sensor.data['timestamp']:
             sensor.data['timestamp'] = dateutil.parser.parse(sensor.data['timestamp']).replace(
